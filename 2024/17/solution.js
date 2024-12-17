@@ -4,6 +4,16 @@ const path = require("path");
 let input = fs.readFileSync(path.resolve(__dirname, "input.txt"), {
   encoding: "utf-8",
 });
+/**
+ * 0:  BST 4; B = A % 8
+ * 2:  BXL 1; B = B ^ 1
+ * 4:  CDV 5; C = A / 2 ** B
+ * 6:  BXL 5; B = B ^ 5
+ * 8:  BXC 3; B = B ^ C
+ * 10: ADV 3; A = A / 2 ** 3
+ * 12: OUT 5; OUT> RB % 8
+ * 14: JNZ 0; IF A != 0 GOTO 0
+ */
 
 // input = `Register A: 2024
 // Register B: 0
