@@ -5,13 +5,13 @@ let input = fs.readFileSync(path.resolve(__dirname, "input.txt"), {
   encoding: "utf-8",
 });
 /**
- * 0:  BST 4; B = A % 8
- * 2:  BXL 1; B = B ^ 1
+ * 0:  BST 4; B = A % 8 (0-7)
+ * 2:  BXL 1; B = B ^ 1 (0-7)
  * 4:  CDV 5; C = A / 2 ** B
  * 6:  BXL 5; B = B ^ 5
  * 8:  BXC 3; B = B ^ C
  * 10: ADV 3; A = A / 2 ** 3
- * 12: OUT 5; OUT> RB % 8
+ * 12: OUT 5; OUT> B % 8
  * 14: JNZ 0; IF A != 0 GOTO 0
  */
 
@@ -107,11 +107,11 @@ while (IP >= 0 && IP < program.length - 1) {
   const inst = imap.get(icode);
   inst(oper);
 }
-console.log(OUT.join(","))
+console.log(OUT.join(","));
 
 let c = 0;
 const s = Date.now();
-const inc = 35_184_372_000_000;
+const inc = 0; //35_184_372_000_000;
 const pl = program.length;
 const pl1 = pl - 1;
 
@@ -131,12 +131,19 @@ while (true) {
     const oper = program[IP + 1];
     const inst = imap.get(icode);
     inst(oper);
-    for (let i = 0; i < pl; i++) {
-      if (OUT[i] && program[i] !== OUT[i]) {
-        break run;
-      }
-    }
+    // if (icode === 5) {
+    //   for (let i = 0; i < pl; i++) {
+    //     if (OUT[i]) {
+    //       if (program[i] !== OUT[i]) {
+    //         break run;
+    //       }
+    //     }
+    //   }
+    // }
   }
+
+  const o = OUT.join(",");
+  console.log(c, o, code);
 
   if (OUT.length === pl) {
     const o = OUT.join(",");

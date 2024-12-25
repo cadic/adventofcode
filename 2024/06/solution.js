@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const input = fs
-  .readFileSync(path.resolve(__dirname, "example.txt"), { encoding: "utf-8" })
+  .readFileSync(path.resolve(__dirname, "input.txt"), { encoding: "utf-8" })
   .split("\n")
   .map((r) => r.split(""));
 
@@ -92,6 +92,7 @@ const step1 = seen.size;
 console.log(step1);
 
 let bigOs = 0;
+const bigOsMap = new Map();
 
 new Map(seen).forEach(([i, j]) => {
   // clear history
@@ -112,9 +113,10 @@ new Map(seen).forEach(([i, j]) => {
     exit = makeMove();
   }
   if ("loop" === exit) {
+    bigOsMap.set(`${i}|${j}`);
     bigOs++;
   }
   map[j][i] = ".";
 });
 
-console.log(bigOs);
+console.log(bigOs, bigOsMap.size);
