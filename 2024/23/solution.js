@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 let input = fs
-  .readFileSync(path.resolve(__dirname, "example.txt"), {
+  .readFileSync(path.resolve(__dirname, "input.txt"), {
     encoding: "utf-8",
   })
   .split("\n")
@@ -49,3 +49,38 @@ computers.forEach((pcs) => {
 });
 
 console.log(parties.size);
+
+// Part 2
+
+const sets = new Map();
+
+const allConnected = (pcs) => {
+  for (let pc of pcs) {
+    const conns = computers.get(pc);
+    for (let candidate of pcs) {
+      if (!conns.includes(candidate)) {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
+const dropNonConnected = (pcs) => {
+  if (allConnected(pcs)) {
+    sets.set(pcs.length, pcs.sort().join(","));
+  }
+  for (let i = 0; i < pcs.length; i++) {
+    const subset = [...pcs];
+    subset.splice(i, 1);
+    if (subset.length > 10) {
+      dropNonConnected(subset);
+    }
+  }
+};
+
+computers.forEach((pcs) => {
+  dropNonConnected(pcs);
+});
+
+console.log(sets);
