@@ -2,15 +2,16 @@ const fs = require("fs");
 const path = require("path");
 
 let input = fs
-  .readFileSync(path.resolve(__dirname, "example.txt"), {
+  .readFileSync(path.resolve(__dirname, "input.txt"), {
     encoding: "utf-8",
   })
   .split("\n")
   .map((r) => r.split(",").map((e) => parseInt(e)));
 
-let w = 7,
-  h = 7;
+let w = 71,
+  h = 71;
 
+console.log(w, h);
 const maze = [];
 for (let r = 0; r < h; r++) {
   maze.push([]);
@@ -20,25 +21,46 @@ for (let r = 0; r < h; r++) {
 }
 i = 0;
 input.forEach(([c, r]) => {
-  if (i === 12) {
+  if (i === 1024) {
     return;
   }
   maze[r][c] = "#";
   i++;
 });
 
+const printMaze = () => {
+  console.log(maze.map((r) => r.join("")).join("\n"));
+  console.log("===");
+};
+
+printMaze();
+
 // Simplify maze
-row: for (let r = 1; r < h; r++) {
-	col: for (let c = 0; c < w; c++) {
-		const current = maze[r][c];
-		if ("#" === current) {
-			continue row;
-		}
-		
-	}
-	
+row: for (let r = h - 1; r > 0; r--) {
+  for (let c = 0; c < h - 2; c++) {
+    if (
+      maze[r][c] === "." &&
+      maze[r][c + 1] === "." &&
+      maze[r - 1][c + 1] === "." &&
+      maze[r - 1][c] === "."
+    ) {
+      maze[r][c] = "#";
+    } else if (
+      r < h - 1 &&
+      maze[r][c] === "." &&
+      maze[r][c + 1] === "." &&
+      maze[r + 1][c + 1] === "." &&
+      maze[r + 1][c] === "."
+    ) {
+      maze[r][c] = "#";
+    } else {
+      continue row;
+    }
+  }
 }
 
+printMaze();
+// return;
 const [sr, sc] = [0, 0];
 const [er, ec] = [h - 1, w - 1];
 
@@ -58,13 +80,6 @@ let steps = 0;
 const start = new Date();
 let straights = 0;
 let turns = 0;
-
-const printMaze = () => {
-  console.log(maze.map((r) => r.join("")).join("\n"));
-  console.log("===");
-};
-
-printMaze();
 
 const check = (r, c, d, path, score) => {
   steps++;

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-let input = fs.readFileSync(path.resolve(__dirname, "example.txt"), {
+let input = fs.readFileSync(path.resolve(__dirname, "input.txt"), {
   encoding: "utf-8",
 });
 
@@ -13,8 +13,8 @@ const robots = input.split("\n").map((r) => {
   };
 });
 
-const w = 11,
-  h = 7;
+const w = 101,
+  h = 103;
 
 const move = (robot, times) => {
   let x = (robot.p[0] + robot.v[0] * times) % w,
@@ -53,7 +53,8 @@ const draw = () => {
     const res = c + 1;
     field[y][x] = res;
   });
-  return field.map((row) => row.join("")).join("\n");
+  return field;
+  //return field.map((row) => row.join("")).join("\n");
 };
 
 const quadrants = [
@@ -83,5 +84,21 @@ const solution = (robots) => {
   return q.reduce((p, v) => p * v, 1);
 };
 
-moveAll(100);
-console.log(solution(robots));
+// console.log(solution(robots));
+
+let c = 0;
+while (true) {
+  c++;
+  moveAll(1);
+  const d = draw();
+  const nlr = d[d.length - 1].filter((e) => e >= 1).length;
+  if (nlr >= d.length - 30) {
+    console.log(
+      draw()
+        .map((row) => row.join(""))
+        .join("\n")
+    );
+  } else if (nlr > 11) {
+    console.log(c, nlr);
+  }
+}

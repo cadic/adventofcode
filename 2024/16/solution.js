@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 let input = fs
-  .readFileSync(path.resolve(__dirname, "example.txt"), {
+  .readFileSync(path.resolve(__dirname, "input.txt"), {
     encoding: "utf-8",
   })
   .split("\n")
@@ -83,7 +83,7 @@ const check = (r, c, d, path, score) => {
 
       if (check(nr, nc, nd, newPath, newScore)) {
         maze[r][c] = nd;
-        printMaze();
+        //printMaze();
       }
     }
   }
