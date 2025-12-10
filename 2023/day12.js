@@ -1,60 +1,37 @@
 const fs = require("fs");
 const rows = fs
-  .readFileSync("day12.txt", { encoding: "utf-8" })
+  .readFileSync("day12e.txt", { encoding: "utf-8" })
   .split("\n")
   .map((l) => {
     const [s, scheme] = l.split(" ");
-    const springs = s.replaceAll(".", "0").replaceAll("#", "1");
     return {
-      springs: springs,
+      springs: s,
       scheme: scheme.split(",").map((a) => parseInt(a)),
     };
   });
 
-const pad = (num, size) => {
-  num = num.toString(2);
-  while (num.length < size) num = "0" + num;
-  return num;
-};
+console.log(rows);
 
-const arrayEquals = (a, b) => {
-  return (
-    Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index])
-  );
-};
-
-const schemeValid = (line, scheme) => {
-  const springs = line
-    .split("0")
-    .filter((a) => a !== "")
-    .map((a) => a.length);
-  return arrayEquals(springs, scheme);
-};
-
-const generateSprings = (line) => {
-  const unknown = [...line.matchAll(/\?/g)].map((a) => a.index);
-  const springs = [];
-  for (let i = 0; i <= Math.pow(2, unknown.length) - 1; i++) {
-    const combination = pad(i, unknown.length);
-    const spring = line.split("");
-    for (let k = 0; k < unknown.length; k++) {
-      spring[unknown[k]] = combination[k];
-    }
-    springs.push(spring.join(""));
+const isValid = (line, mask) => {
+  if (line.length !== mask.length) {
+    return false;
   }
-  return springs;
+  for (let i = 0; i < line.length; i++) {
+    if (!(mask[i] === "?" || mask[i] === line[i])) {
+      return false;
+    }
+  }
+  return true;
 };
 
-const score1 = rows
-  .map(
-    (row) =>
-      generateSprings(row.springs)
-        .map((s) => schemeValid(s, row.scheme))
-        .filter((a) => a === true).length
-  )
-  .reduce((p, v) => p + v, 0);
+const generate = (scheme, mask) => {
+  const size = mask.length;
+  const springs = scheme.map((s) => new Array(s + 1).join("#"));
+  const gaps = springs.length + 1;
+  const maxGapSize = size - springs.join("").length - gaps + 3;
+  console.log(scheme, mask, size, springs, gaps, maxGapSize);
+};
 
-console.log("Day 12a", score1);
+rows.map((row) => {
+  const lines = generate(row.scheme, row.springs);
+});
